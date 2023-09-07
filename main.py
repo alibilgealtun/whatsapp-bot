@@ -40,7 +40,7 @@ class WhatsAppBot:
             search_box.send_keys(contact)
             time.sleep(2)
             search_box.send_keys(Keys.ENTER)
-            time.sleep(4)
+            time.sleep(2)
 
             # Send message
             message_box = self.driver.find_element("xpath", "//div[@title='Type a message']")
@@ -55,7 +55,7 @@ class WhatsAppBot:
             search_box.send_keys(contact)
             time.sleep(2)
             search_box.send_keys(Keys.ENTER)
-            time.sleep(4)
+            time.sleep(2)
 
             attachment_button = WebDriverWait(self.driver, 10).until(
                 EC.element_to_be_clickable((By.XPATH, "//div[@title='Attach']"))
