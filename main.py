@@ -1,5 +1,5 @@
 import sqlite3
-from tkinter import Tk, Label, Entry, Button, filedialog, Listbox, messagebox
+from tkinter import Tk, Label, Entry, Button, filedialog, Listbox, messagebox, Frame, BOTTOM, LEFT
 import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -207,17 +207,49 @@ def main():
     window.title("WhatsApp Bot")
     window.geometry("500x1000")  # window size
 
-    # Add contacts to listbox
-    listbox_contacts = Listbox(window, selectmode="extended", width=30, height=30)
-    for contact in contacts.contacts:
-        listbox_contacts.insert('end', contact[0])
-    listbox_contacts.pack()
-
     button_select_driver = Button(window, text="Sürücü Yolu Seç", command=Files.select_driver_path)
     button_select_driver.pack()
 
-    button_remove_selected_contacts = Button(window, text="Seçilenleri Sil", command=contacts.remove_selected_contacts)
-    button_remove_selected_contacts.pack()
+    contactFrame = Frame(window)
+    contactFrame.pack(pady="50")
+
+    # Add contacts to listbox
+    listbox_contacts = Listbox(contactFrame, selectmode="extended", width=30, height=20)
+    for contact in contacts.contacts:
+        listbox_contacts.insert('end', contact[0])
+
+    listbox_contacts.grid(row=1, column=0)
+
+    label_contacts = Label(contactFrame, text="Kişiler")
+    label_contacts.grid(row=0, column=0)
+
+    contactFrameTexts = Frame(contactFrame)
+    contactFrameTexts.grid(padx="10", row=1, column=1)
+
+    button_addVCF = Button(contactFrameTexts, text="Rehber Ekle (VCF)", command=contacts.readVCF, fg="green", width=15, height=2)
+    button_addVCF.grid(row=0,column=0)
+
+    button_reset_contacts = Button(contactFrameTexts, text="Sıfırla", command=contacts.reset_contacts, width=15, height=2, fg="red")
+    button_reset_contacts.grid(row=0,column=1)
+
+    button_remove_selected_contacts = Button(contactFrameTexts, text="Seçilenleri Sil",
+                                             command=contacts.remove_selected_contacts,width=35, height=2)
+    button_remove_selected_contacts.grid(row=1, column=0, columnspan=2)
+
+
+
+    plusMinusbuttons = Frame(contactFrame)
+    plusMinusbuttons.grid()
+    label_new_contact = Label(plusMinusbuttons, text="Kişi Ekle:", width=10,height=2)
+    label_new_contact.grid(row=0, column=0)
+    entry_new_contact = Entry(plusMinusbuttons, width=11)
+    entry_new_contact.grid(row=0, column=1)
+
+    button_add_contact = Button(plusMinusbuttons, text="+", command=contacts.add_contact, width=3, height=1)
+    button_add_contact.grid(row=0, column=2)
+
+
+
 
     label_message = Label(window, text="Mesaj:")
     label_message.pack()
@@ -225,32 +257,15 @@ def main():
     entry_message = Entry(window)
     entry_message.pack()
 
-    label_new_contact = Label(window, text="Kişi Ekle:")
-    label_new_contact.pack()
-
-    entry_new_contact = Entry(window)
-    entry_new_contact.pack()
-
-    button_add_contact = Button(window, text="+", command=contacts.add_contact)
-    button_add_contact.pack()
-
-    button_remove_contact = Button(window, text="-", command=contacts.remove_contact)
-    button_remove_contact.pack()
-
-    button_start = Button(window, text="Başlat", command=start_bot)
+    button_start = Button(window, text="Başlat", command=start_bot, width=15, height=2)
     button_start.pack()
 
-    button_select_image = Button(window, text="Resim Seç", command=Files.select_image)
+    button_select_image = Button(window, text="Resim Seç", command=Files.select_image,width=15, height=2)
     button_select_image.pack()
 
-    button_select_pdf = Button(window, text="PDF Seç", command=Files.select_pdf)
+    button_select_pdf = Button(window, text="PDF Seç", command=Files.select_pdf,width=15, height=2)
     button_select_pdf.pack()
 
-    button_addVCF = Button(window, text="Rehber Ekle (VCF)", command=contacts.readVCF)
-    button_addVCF.pack()
-
-    button_reset_contacts = Button(window, text="Sıfırla", command=contacts.reset_contacts)
-    button_reset_contacts.pack()
     # listbox_contacts.bind("<<ListboxSelect>>")
     window.mainloop()
 
