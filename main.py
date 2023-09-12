@@ -1,5 +1,5 @@
 import sqlite3
-from tkinter import filedialog, messagebox, Listbox
+from tkinter import filedialog, messagebox, Listbox, Entry
 import customtkinter as ctk
 import time
 from selenium import webdriver
@@ -211,7 +211,7 @@ def main():
 
     root = ctk.CTk()
     root.title("WhatsApp Bot")
-    root.geometry("680x1000")  # window size
+    root.geometry("700x1000")  # window size
 
     contactFrame = ctk.CTkFrame(root)
     contactFrame.pack(pady=40, padx=40, fill="both")
@@ -247,7 +247,7 @@ def main():
     plusMinusbuttons.grid(row=2, column=3, pady=15)
     label_new_contact = ctk.CTkLabel(plusMinusbuttons, text="Kişi Ekle:", width=10, height=2, font=('Arial', 20))
     label_new_contact.grid(row=0, column=0, padx=15, pady=10)
-    entry_new_contact = ctk.CTkEntry(plusMinusbuttons, width=130, placeholder_text="Kişi", font=('Arial', 20))
+    entry_new_contact = Entry(plusMinusbuttons, width=15, font=('Arial', 20), bg="gray")
     entry_new_contact.grid(row=0, column=1, padx=15, pady=10)
 
     button_add_contact = ctk.CTkButton(plusMinusbuttons, text=" + ", font=('Arial', 20), command=contacts.add_contact,
@@ -257,10 +257,10 @@ def main():
     sending_frame = ctk.CTkFrame(root)
     sending_frame.pack(pady=40, padx=40, fill="both")
 
-    label_message = ctk.CTkLabel(sending_frame, text="Mesaj:", font=("Roboto", 24), )
+    label_message = ctk.CTkLabel(sending_frame, text="Mesaj:", font=("Arial", 24), )
     label_message.grid(row=0, column=0)
 
-    entry_message = ctk.CTkEntry(sending_frame, width=500, height=30, placeholder_text="Mesaj", font=("Arial", 13))
+    entry_message = Entry(sending_frame, width=50, font=("Arial", 20), bg="gray")
     entry_message.grid(row=0, column=1,columnspan=2, padx=20)
 
     button_select_image = ctk.CTkButton(sending_frame, text="Resim Seç", command=Files.select_image, width=15, height=2,
