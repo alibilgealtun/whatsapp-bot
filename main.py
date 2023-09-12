@@ -15,6 +15,8 @@ import vobject
 
 
 class WhatsAppBot:
+    """WhatsApp Bot class for sending messages and files via WhatsApp Web."""
+
     def __init__(self):
         self.pdf_file_paths = None
         self.driver = None
@@ -22,14 +24,17 @@ class WhatsAppBot:
         self.pdf_file_path = None
 
     def start(self):
-        if driver_path is None:
-            Files.select_driver_path()
+        try:
+            if driver_path is None:
+                Files.select_driver_path()
 
-        service = Service(driver_path)
-        self.driver = webdriver.Chrome(service=service)
+            service = Service(driver_path)
+            self.driver = webdriver.Chrome(service=service)
 
-        self.driver.get("https://web.whatsapp.com")
-        time.sleep(15)  # Wait for the QR Scanning
+            self.driver.get("https://web.whatsapp.com")
+            time.sleep(15)  # Wait for the QR Scanning
+        except Exception as e:
+            print(f"An error occurred: {str(e)}")
 
     def stop(self):
         if self.driver:
@@ -78,6 +83,8 @@ class WhatsAppBot:
 
 
 class Contacts:
+    """Class to control contact list"""
+
     def __init__(self):
         self.cursor = None
         self.conn = None
@@ -92,14 +99,7 @@ class Contacts:
             listbox_contacts.insert('end', name)
             entry_new_contact.delete(0, 'end')
 
-    def remove_contact(self):
-        self.conn = sqlite3.connect("contacts.db")
-        selected_index = listbox_contacts.curselection()
-        if selected_index:
-            name = listbox_contacts.get(selected_index)
-            self.cursor.execute("DELETE FROM contacts WHERE name=?", (name,))
-            self.conn.commit()
-            listbox_contacts.delete(selected_index)
+
 
     def readVCF(self):
         self.vcf_path = Files.select_vcf()
