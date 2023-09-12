@@ -13,7 +13,6 @@ import vobject
 
 # -*- coding: utf-8 -*-
 
-
 class WhatsAppBot:
     """WhatsApp Bot class for sending messages and files via WhatsApp Web."""
 
@@ -99,8 +98,6 @@ class Contacts:
             listbox_contacts.insert('end', name)
             entry_new_contact.delete(0, 'end')
 
-
-
     def readVCF(self):
         self.vcf_path = Files.select_vcf()
 
@@ -122,7 +119,7 @@ class Contacts:
 
     def reset_contacts(self):
         # Confirm resetting contacts
-        confirmed = messagebox.askyesno("Onay", "Tüm rehberi sıfırlamak istediğinizden emin misiniz?")
+        confirmed = messagebox.askyesno("Confirmation", "Are you sure you want to reset all contacts?")
         if confirmed:
             # Delete contacts
             self.cursor.execute("DELETE FROM contacts")
@@ -211,7 +208,7 @@ def main():
 
     root = ctk.CTk()
     root.title("WhatsApp Bot")
-    root.geometry("700x1000")  # window size
+    root.geometry("750x1000")  # window size
 
     contactFrame = ctk.CTkFrame(root)
     contactFrame.pack(pady=40, padx=40, fill="both")
@@ -224,28 +221,28 @@ def main():
 
     listbox_contacts.grid(row=1, column=3)
 
-    label_contacts = ctk.CTkLabel(contactFrame, text="Kişiler", font=('Arial', 20))
+    label_contacts = ctk.CTkLabel(contactFrame, text="Contacts", font=('Arial', 20))
     label_contacts.grid(row=0, column=3)
 
     contactFrameTexts = ctk.CTkFrame(contactFrame)
     contactFrameTexts.grid(padx="10", pady="10", row=1, column=4)
 
-    button_addVCF = ctk.CTkButton(contactFrameTexts, text="Rehber Ekle (VCF)", command=contacts.readVCF, width=15,
+    button_addVCF = ctk.CTkButton(contactFrameTexts, text="Add Contacts (VCF)", command=contacts.readVCF, width=15,
                                   height=2, font=('Arial', 20), fg_color="green")
     button_addVCF.grid(row=0, column=0, padx=10, pady=10)
 
-    button_reset_contacts = ctk.CTkButton(contactFrameTexts, text="Sıfırla", command=contacts.reset_contacts, width=15,
+    button_reset_contacts = ctk.CTkButton(contactFrameTexts, text="Reset", command=contacts.reset_contacts, width=15,
                                           height=2, font=('Arial', 20), fg_color="red")
     button_reset_contacts.grid(row=0, column=1, padx=10, pady=10)
 
-    button_remove_selected_contacts = ctk.CTkButton(contactFrameTexts, text="Seçilenleri Sil",
+    button_remove_selected_contacts = ctk.CTkButton(contactFrameTexts, text="Remove Selected",
                                                     command=contacts.remove_selected_contacts, width=35, height=2,
                                                     font=('Roboto', 20))
     button_remove_selected_contacts.grid(row=1, column=0, columnspan=2)
 
     plusMinusbuttons = ctk.CTkFrame(contactFrame)
     plusMinusbuttons.grid(row=2, column=3, pady=15)
-    label_new_contact = ctk.CTkLabel(plusMinusbuttons, text="Kişi Ekle:", width=10, height=2, font=('Arial', 20))
+    label_new_contact = ctk.CTkLabel(plusMinusbuttons, text="Add Contact:", width=10, height=2, font=('Arial', 20))
     label_new_contact.grid(row=0, column=0, padx=15, pady=10)
     entry_new_contact = Entry(plusMinusbuttons, width=15, font=('Arial', 20), bg="gray")
     entry_new_contact.grid(row=0, column=1, padx=15, pady=10)
@@ -257,28 +254,27 @@ def main():
     sending_frame = ctk.CTkFrame(root)
     sending_frame.pack(pady=40, padx=40, fill="both")
 
-    label_message = ctk.CTkLabel(sending_frame, text="Mesaj:", font=("Arial", 24), )
+    label_message = ctk.CTkLabel(sending_frame, text="Message:", font=("Arial", 24), )
     label_message.grid(row=0, column=0)
 
     entry_message = Entry(sending_frame, width=50, font=("Arial", 20), bg="gray")
     entry_message.grid(row=0, column=1,columnspan=2, padx=20)
 
-    button_select_image = ctk.CTkButton(sending_frame, text="Resim Seç", command=Files.select_image, width=15, height=2,
+    button_select_image = ctk.CTkButton(sending_frame, text="Select Image", command=Files.select_image, width=15, height=2,
                                         font=("Arial", 24), anchor="center")
     button_select_image.grid(row=1, column=1, padx=20, pady=20)
 
-    button_select_pdf = ctk.CTkButton(sending_frame, text="PDF Seç", command=Files.select_pdf, width=15, height=2,
+    button_select_pdf = ctk.CTkButton(sending_frame, text="Select PDF", command=Files.select_pdf, width=15, height=2,
                                       font=("Arial", 24), )
     button_select_pdf.grid(row=1,column=2, padx=20,pady=20)
 
-    button_select_driver = ctk.CTkButton(root, text="Sürücü Yolu Seç", command=Files.select_driver_path, width=15,
+    button_select_driver = ctk.CTkButton(root, text="Select Driver Path", command=Files.select_driver_path, width=15,
                                          font=("Arial", 24),
                                          height=2)
     button_select_driver.pack(side="left", padx=100)
 
-    button_start = ctk.CTkButton(root, text="Başlat", command=start_bot, width=15, height=2, font=("Arial", 24), )
+    button_start = ctk.CTkButton(root, text="Start", command=start_bot, width=15, height=2, font=("Arial", 24), )
     button_start.pack(side="right", padx=100)
-
 
     root.mainloop()
 
