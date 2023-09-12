@@ -1,5 +1,7 @@
 import sqlite3
-from tkinter import Tk, Label, Entry, Button, filedialog, Listbox, messagebox, Frame, BOTTOM, LEFT
+from tkinter import filedialog, messagebox
+import customtkinter as ctk
+from CTkListbox import *
 import time
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -185,7 +187,7 @@ class Files:
 
 
 def main():
-    global window, entry_new_contact, listbox_contacts
+    global root, entry_new_contact, listbox_contacts
 
     def start_bot():
         def run_bot():
@@ -203,78 +205,78 @@ def main():
         bot_thread = threading.Thread(target=run_bot)
         bot_thread.start()
 
-    window = Tk()
-    window.title("WhatsApp Bot")
-    window.geometry("500x1000")  # window size
+    ctk.set_appearance_mode("System")
+    ctk.set_default_color_theme("dark-blue")  # or green,red whatever u want
 
-    button_select_driver = Button(window, text="Sürücü Yolu Seç", command=Files.select_driver_path)
-    button_select_driver.pack()
+    root = ctk.CTk()
+    root.title("WhatsApp Bot")
+    root.geometry("550x800")  # window size
 
-    contactFrame = Frame(window)
-    contactFrame.pack(pady="50")
+    contactFrame = ctk.CTkFrame(root)
+    contactFrame.pack(pady=40, padx=40, fill="both")
 
     # Add contacts to listbox
-    listbox_contacts = Listbox(contactFrame, selectmode="extended", width=30, height=20)
+    listbox_contacts = CTkListbox(contactFrame, width=150, height=20, fg_color="gray", multiple_selection=True)
     for contact in contacts.contacts:
         listbox_contacts.insert('end', contact[0])
 
-    listbox_contacts.grid(row=1, column=0)
+    listbox_contacts.grid(row=1, column=3)
 
-    label_contacts = Label(contactFrame, text="Kişiler")
-    label_contacts.grid(row=0, column=0)
+    label_contacts = ctk.CTkLabel(contactFrame, text="Kişiler", font=('Roboto', 20))
+    label_contacts.grid(row=0, column=3)
 
-    contactFrameTexts = Frame(contactFrame)
-    contactFrameTexts.grid(padx="10", row=1, column=1)
+    contactFrameTexts = ctk.CTkFrame(contactFrame)
+    contactFrameTexts.grid(padx="10", pady="10", row=1, column=4)
 
-    button_addVCF = Button(contactFrameTexts, text="Rehber Ekle (VCF)", command=contacts.readVCF, fg="green", width=15, height=2)
-    button_addVCF.grid(row=0,column=0)
+    button_addVCF = ctk.CTkButton(contactFrameTexts, text="Rehber Ekle (VCF)", command=contacts.readVCF, width=15,
+                                  height=2, font=('Roboto', 20))
+    button_addVCF.grid(row=0, column=0, padx=10, pady=10)
 
-    button_reset_contacts = Button(contactFrameTexts, text="Sıfırla", command=contacts.reset_contacts, width=15, height=2, fg="red")
-    button_reset_contacts.grid(row=0,column=1)
+    button_reset_contacts = ctk.CTkButton(contactFrameTexts, text="Sıfırla", command=contacts.reset_contacts, width=15,
+                                          height=2,font=('Roboto', 20))
+    button_reset_contacts.grid(row=0, column=1,padx=10, pady=10)
 
-    button_remove_selected_contacts = Button(contactFrameTexts, text="Seçilenleri Sil",
-                                             command=contacts.remove_selected_contacts,width=35, height=2)
+    button_remove_selected_contacts = ctk.CTkButton(contactFrameTexts, text="Seçilenleri Sil",
+                                                    command=contacts.remove_selected_contacts, width=35, height=2, font=('Roboto', 20))
     button_remove_selected_contacts.grid(row=1, column=0, columnspan=2)
 
-
-
-    plusMinusbuttons = Frame(contactFrame)
-    plusMinusbuttons.grid()
-    label_new_contact = Label(plusMinusbuttons, text="Kişi Ekle:", width=10,height=2)
+    plusMinusbuttons = ctk.CTkFrame(contactFrame)
+    plusMinusbuttons.grid(row=2, column=3)
+    label_new_contact = ctk.CTkLabel(plusMinusbuttons, text="Kişi Ekle:", width=10, height=2, font=('Roboto', 15))
     label_new_contact.grid(row=0, column=0)
-    entry_new_contact = Entry(plusMinusbuttons, width=11)
+    entry_new_contact = ctk.CTkEntry(plusMinusbuttons, width=100, placeholder_text="Kişi")
     entry_new_contact.grid(row=0, column=1)
 
-    button_add_contact = Button(plusMinusbuttons, text="+", command=contacts.add_contact, width=3, height=1)
+    button_add_contact = ctk.CTkButton(plusMinusbuttons, text="+", command=contacts.add_contact, width=3, height=1)
     button_add_contact.grid(row=0, column=2)
 
-
-
-
-    label_message = Label(window, text="Mesaj:")
+    label_message = ctk.CTkLabel(root, text="Mesaj:")
     label_message.pack()
 
-    entry_message = Entry(window)
+    entry_message = ctk.CTkEntry(root, width=40,placeholder_text="Mesaj")
     entry_message.pack()
 
-    button_start = Button(window, text="Başlat", command=start_bot, width=15, height=2)
+    button_start = ctk.CTkButton(root, text="Başlat", command=start_bot, width=15, height=2)
     button_start.pack()
 
-    button_select_image = Button(window, text="Resim Seç", command=Files.select_image,width=15, height=2)
+    button_select_image = ctk.CTkButton(root, text="Resim Seç", command=Files.select_image, width=15, height=2)
     button_select_image.pack()
 
-    button_select_pdf = Button(window, text="PDF Seç", command=Files.select_pdf,width=15, height=2)
+    button_select_pdf = ctk.CTkButton(root, text="PDF Seç", command=Files.select_pdf, width=15, height=2)
     button_select_pdf.pack()
 
-    # listbox_contacts.bind("<<ListboxSelect>>")
-    window.mainloop()
+    button_select_driver = ctk.CTkButton(root, text="Sürücü Yolu Seç", command=Files.select_driver_path, width=15,
+                                         height=2)
+    button_select_driver.pack()
+
+    root.mainloop()
 
 
 driver_path = None
 entry_new_contact = ""
 listbox_contacts = None
 bot = WhatsAppBot()
-window = None
+root = None
 
 contacts = Contacts()
 
