@@ -11,6 +11,7 @@ from selenium.webdriver.common.by import By
 import threading
 import vobject
 
+
 # -*- coding: utf-8 -*-
 
 class WhatsAppBot:
@@ -39,46 +40,40 @@ class WhatsAppBot:
         if self.driver:
             self.driver.quit()
 
-    def send_message(self, message):
+    def send_message(self, message, contact):
         contacts.update_db()
-        for contact in contacts.contacts:
-            # Search for the name
-            search_box = self.driver.find_element("xpath", "//div[@contenteditable='true']")
-            search_box.send_keys(contact)
-            time.sleep(2)
-            search_box.send_keys(Keys.ENTER)
-            time.sleep(2)
 
-            # Send message
-            message_box = self.driver.find_element("xpath", "//div[@title='Type a message']")
-            message_box.send_keys(message)
-            message_box.send_keys(Keys.ENTER)
-            time.sleep(2)
+        # Search for the name
+        search_box = self.driver.find_element("xpath", "//div[@contenteditable='true']")
+        search_box.send_keys(contact)
+        time.sleep(2)
+        search_box.send_keys(Keys.ENTER)
+        time.sleep(2)
 
-    def send_file(self, file_path):
+        # Send message
+        message_box = self.driver.find_element("xpath", "//div[@title='Type a message']")
+        message_box.send_keys(message)
+        message_box.send_keys(Keys.ENTER)
+        time.sleep(2)
+
+    def send_file(self, file_path, contact):
         contacts.update_db()
-        for contact in contacts.contacts:
-            search_box = self.driver.find_element("xpath", "//div[@content editable='true']")
-            search_box.send_keys(contact)
-            time.sleep(2)
-            search_box.send_keys(Keys.ENTER)
-            time.sleep(2)
 
-            attachment_button = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, "//div[@title='Attach']"))
-            )
-            attachment_button.click()
-            time.sleep(2)
+        attachment_button = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//span[@data-icon='attach-menu-plus']"))
+        )
+        attachment_button.click()
+        time.sleep(2)
 
-            file_input = self.driver.find_element("xpath", "//input[@accept='*']")
-            file_input.send_keys(file_path)
-            time.sleep(2)
+        file_input = self.driver.find_element("xpath", "//input[@accept='*']")
+        file_input.send_keys(file_path)
+        time.sleep(2)
 
-            send_button = WebDriverWait(self.driver, 10).until(
-                EC.element_to_be_clickable((By.XPATH, "//span[@data-icon='send']"))
-            )
-            send_button.click()
-            time.sleep(5)
+        send_button = WebDriverWait(self.driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "//span[@data-icon='send']"))
+        )
+        send_button.click()
+        time.sleep(2)
 
 
 class Contacts:
@@ -167,7 +162,7 @@ class Files:
     def select_pdf():
         file_paths = filedialog.askopenfilenames(filetypes=[("PDF Files", "*.pdf")])
         if file_paths:
-            bot.pdf_file_paths = list(file_paths)
+            bot.pdf_file_path = list(file_paths)
 
     @staticmethod
     def select_driver_path():
@@ -191,12 +186,15 @@ def main():
         def run_bot():
             bot.start()
             message = entry_message.get()
-            if message:
-                bot.send_message(message)
-            if bot.image_file_path:
-                bot.send_file(bot.image_file_path)
-            if bot.pdf_file_path:
-                bot.send_file(bot.pdf_file_path)
+            print(contacts.contacts)
+            for cont in contacts.contacts:
+                if message:
+                    bot.send_message(message, cont)
+                if bot.pdf_file_path:
+                    bot.send_file(bot.pdf_file_path, cont)
+                if bot.image_file_path:
+                    bot.send_file(bot.image_file_path, cont)
+
             bot.stop()
 
         # Start a new thread to process in the background
@@ -258,15 +256,16 @@ def main():
     label_message.grid(row=0, column=0)
 
     entry_message = Entry(sending_frame, width=50, font=("Arial", 20), bg="gray")
-    entry_message.grid(row=0, column=1,columnspan=2, padx=20)
+    entry_message.grid(row=0, column=1, columnspan=2, padx=20)
 
-    button_select_image = ctk.CTkButton(sending_frame, text="Select Image", command=Files.select_image, width=15, height=2,
+    button_select_image = ctk.CTkButton(sending_frame, text="Select Image", command=Files.select_image, width=15,
+                                        height=2,
                                         font=("Arial", 24), anchor="center")
     button_select_image.grid(row=1, column=1, padx=20, pady=20)
 
     button_select_pdf = ctk.CTkButton(sending_frame, text="Select PDF", command=Files.select_pdf, width=15, height=2,
                                       font=("Arial", 24), )
-    button_select_pdf.grid(row=1,column=2, padx=20,pady=20)
+    button_select_pdf.grid(row=1, column=2, padx=20, pady=20)
 
     button_select_driver = ctk.CTkButton(root, text="Select Driver Path", command=Files.select_driver_path, width=15,
                                          font=("Arial", 24),
